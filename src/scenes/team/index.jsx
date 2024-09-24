@@ -1,4 +1,4 @@
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box, Button, Typography, useTheme } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
@@ -7,6 +7,8 @@ import SecurityOutlinedIcon from "@mui/icons-material/SecurityOutlined";
 import Header from "../../components/Header";
 import React, { useState, useEffect } from "react";
 
+import { useNavigate } from "react-router-dom"; // Updated import
+
 const Team = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -14,6 +16,12 @@ const Team = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState("");
+
+  const navigate = useNavigate(); // Use navigate
+
+  const handleTaskListClick = (staffId) => {
+    navigate(`/tasks/${staffId}`);
+  };
 
   // Function to log in and obtain the token
   const login = async () => {
@@ -25,8 +33,8 @@ const Team = () => {
           "user-agent": navigator.userAgent,
         },
         body: JSON.stringify({
-          email: "anghamz@gmail.com",
-          password: "password",
+          email: "angreg007@gmail.com",
+          password: "admin",
         }),
       });
 
@@ -114,22 +122,15 @@ const Team = () => {
       field: "access",
       headerName: "Access Level",
       flex: 1,
-      renderCell: () => {
+      renderCell: (params) => {
         return (
-          <Box
-            width="60%"
-            m="0 auto"
-            p="5px"
-            display="flex"
-            justifyContent="center"
-            backgroundColor={colors.greenAccent[700]} // Set badge color for 'manager'
-            borderRadius="4px"
+          <Button
+            color="secondary"
+            variant="contained"
+            onClick={() => handleTaskListClick(params.row.id)}
           >
-            <SecurityOutlinedIcon /> {/* Always show the 'manager' icon */}
-            <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
-              manager
-            </Typography>
-          </Box>
+            Liste des taches
+          </Button>
         );
       },
     },

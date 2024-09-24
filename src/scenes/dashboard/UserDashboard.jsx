@@ -42,13 +42,13 @@ const UserDashboard = () => {
       {contact && (
         <>
           <Typography variant="h4" mb="20px">
-            {contact.name}'s Dashboard
+            Dashboard de {contact.name}
           </Typography>
           <Typography variant="body1" mb="10px">
             Email: {contact.email}
           </Typography>
           <Typography variant="body1" mb="20px">
-            Phone: {contact.phone}
+            Téléphone: {contact.phone}
           </Typography>
           {/* Render the Line component */}
           <Box flexGrow={1}>

@@ -24,8 +24,8 @@ const Contacts = () => {
           "user-agent": navigator.userAgent,
         },
         body: JSON.stringify({
-          email: "anghamz@gmail.com",
-          password: "password",
+          email: "angreg007@gmail.com",
+          password: "admin",
         }),
       });
 
@@ -54,7 +54,7 @@ const Contacts = () => {
 
       try {
         const response = await fetch(
-          "http://localhost:3000/users?role=Default",
+          "http://localhost:3000/users?role=Default&isSubscribed=true",
           {
             method: "GET",
             headers: {
@@ -98,8 +98,12 @@ const Contacts = () => {
     navigate(`/dashboard/UserDashboard`);
   };
 
+  const handleCommandeRedirect = (contact) => {
+    // Navigate to the Commande page with the contact information
+    navigate(`/command/${contact.id}`);
+  };
+
   const columns = [
-    { field: "id", headerName: "ID", flex: 0.5 },
     {
       field: "name",
       headerName: "Nom",
@@ -128,12 +132,12 @@ const Contacts = () => {
               backgroundColor: colors.greenAccent[700],
               color: "#fff",
               "&:hover": {
-                backgroundColor: colors.greenAccent[500], // Optional: Add a hover effect
+                backgroundColor: colors.greenAccent[500],
               },
             }}
             onClick={() => handleDashboardRedirect(params.row)}
           >
-            Go to Dashboard
+            Dashboard
           </Button>
         );
       },
