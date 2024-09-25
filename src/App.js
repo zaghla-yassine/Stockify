@@ -20,6 +20,7 @@ import AddStaffForm from "./scenes/staff";
 import Guests from "./scenes/guests";
 import Command from "./scenes/command";
 import TaskListPage from "./scenes/tasks";
+import NotificationsPage from "./scenes/notifications";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -50,6 +51,7 @@ function App() {
               <Route path="/dashboard/:userId" element={<UserDashboard />} />
               <Route path="/command/:clientId" element={<Command />} />
               <Route path="/tasks/:staffId" element={<TaskListPage />} />
+              <Route path="/notifications" element={<NotificationsPage />} />
             </Routes>
           </main>
         </div>

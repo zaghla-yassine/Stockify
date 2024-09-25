@@ -11,6 +11,7 @@ import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import PeopleOutlineOutlinedIcon from "@mui/icons-material/PeopleOutlineOutlined";
+import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 
@@ -153,6 +154,13 @@ const Sidebar = () => {
               title="Liste des visiteurs"
               to="/guests"
               icon={<ContactsOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Liste des notifications"
+              to="/notifications"
+              icon={<NotificationsOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />

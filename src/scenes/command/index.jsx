@@ -38,7 +38,8 @@ const Command = () => {
   const [clientInfo, setClientInfo] = useState({});
   const [productId, setProductId] = useState(null);
   const [productPackType, setProductPackType] = useState(null);
-
+  const [taskAssigned, setTaskAssigned] = useState(false); // New state to track task assignment
+  const [paymentSnackbarOpen, setPaymentSnackbarOpen] = useState(false);
   const steps = [
     "Non payé",
     "En cours d'installation",
@@ -68,7 +69,6 @@ const Command = () => {
   }
 
   // Fetch staff when dialog opens
-  // Fetch staff when dialog opens
   const fetchStaff = async () => {
     try {
       const response = await fetch("http://localhost:3000/staff", {
@@ -83,18 +83,16 @@ const Command = () => {
       }
 
       const data = await response.json();
-      console.log("suiii", data); // This should show the full response object
 
-      // If staff is inside an object, extract the `staffs` array
       setStaffList(data.staffs); // Assuming `staffs` is the key in your response
     } catch (error) {
       setError("Error fetching staff.");
     }
   };
+  console.log("Staff list:", staffList);
 
   // Open the staff selection dialog
   const handleOpenDialog = () => {
-    handleTaskCreation();
     fetchStaff(); // Fetch staff when opening the dialog
     setDialogOpen(true); // Open the dialog
   };
@@ -108,6 +106,9 @@ const Command = () => {
   const handleSelectStaff = (staff) => {
     setSelectedStaff(staff); // Set selected staff
     setDialogOpen(false); // Close dialog after selection
+
+    // Proceed to the next step after staff selection
+    setActiveStep((prevStep) => prevStep + 1);
   };
 
   const handlePayment = async () => {
@@ -128,6 +129,7 @@ const Command = () => {
       }
 
       setActiveStep(1);
+      setPaymentSnackbarOpen(true); // Show snackbar on successful payment
     } catch (error) {
       console.error("Error during payment:", error);
       setError("Payment failed. Please try again.");
@@ -180,6 +182,7 @@ const Command = () => {
       }
 
       setSnackbarOpen(true);
+      setTaskAssigned(true); // Update state to indicate task is assigned
     } catch (error) {
       setError(error.message);
     }
@@ -188,7 +191,7 @@ const Command = () => {
   const handleCloseSnackbar = () => {
     setSnackbarOpen(false);
   };
-  console.log("aaaaa", staffList);
+
   return (
     <Box m="20px">
       <Header title="COMMANDE" subtitle="Processus de Commande" />
@@ -211,7 +214,8 @@ const Command = () => {
         {steps.map((label, index) => (
           <Step key={label}>
             <StepLabel
-              StepIconProps={{ style: { fontSize: "4rem", color: "#4CAF50" } }} // Augmente la taille des numéros
+              sx={{ fontSize: "2rem" }}
+              StepIconProps={{ style: { fontSize: "4rem", color: "#4CAF50" } }} // Increase the size of the icons
             >
               {label}
               {index === 2 && (
@@ -235,7 +239,7 @@ const Command = () => {
               onChange={(e) => {
                 const value = parseFloat(e.target.value);
                 if (value > 0 || e.target.value === "") {
-                  setAmountInDT(e.target.value); // Met à jour seulement si la valeur est > 0 ou vide (pour permettre l'effacement)
+                  setAmountInDT(e.target.value); // Only update if the value is > 0 or empty (to allow clearing the input)
                 }
               }}
               min="0"
@@ -272,33 +276,60 @@ const Command = () => {
 
         {activeStep === 2 && (
           <Box>
-            <Typography variant="h6">Installation Completed</Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleTaskCreation} // Assign task to the selected staff member
-              sx={{ mt: 2 }}
-            >
-              Assign Task to Staff
-            </Button>
+            {!taskAssigned ? (
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={handleTaskCreation} // Assign task to the selected staff member
+                sx={{ ml: 105 }}
+              >
+                Accorder cette tache
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                disabled // Disable the button since the task is already assigned
+                sx={{
+                  ml: 180,
+                  backgroundColor: "red",
+                  color: "white",
+                  "&:hover": { backgroundColor: "darkred" },
+                }}
+              >
+                En cours de livraison
+              </Button>
+            )}
           </Box>
         )}
       </Box>
 
-      {/* Error Message */}
-      {error && (
-        <Typography color="error" ml={105}>
-          {error}
-        </Typography>
-      )}
-
       {/* Snackbar for Task Creation */}
       <Snackbar
         open={snackbarOpen}
-        autoHideDuration={3000}
+        autoHideDuration={7000}
         onClose={handleCloseSnackbar}
-        message="Task created successfully"
+        message="Tache créé avec succès"
+        sx={{
+          "& .MuiSnackbarContent-root": {
+            fontSize: "1.5rem", // Increase font size
+            padding: "16px 24px", // Increase padding if needed
+          },
+        }}
       />
+      {/* Snackbar for Payment */}
+      <Snackbar
+        open={paymentSnackbarOpen}
+        autoHideDuration={10000} // Same duration as the task snackbar
+        onClose={() => setPaymentSnackbarOpen(false)}
+        message="Paiement fait avec succès"
+        sx={{
+          "& .MuiSnackbarContent-root": {
+            fontSize: "1.5rem", // Same font size as the task snackbar
+            padding: "16px 24px", // Same padding as the task snackbar
+          },
+        }}
+      />
+
       {/* Dialog for staff selection */}
       <Dialog open={dialogOpen} onClose={handleCloseDialog}>
         <DialogTitle style={{ color: "green", fontWeight: "bold" }}>
@@ -307,20 +338,23 @@ const Command = () => {
 
         <DialogContent>
           <List>
-            {staffList.map((staff, i) => (
+            {staffList.map((staff, index) => (
               <ListItem key={staff.id}>
                 <ListItemButton onClick={() => handleSelectStaff(staff)}>
                   <ListItemText
-                    primary={`${i + 1}. ${staff.firstName} ${staff.lastName}`}
+                    primary={`${index + 1}. ${staff.firstName} ${
+                      staff.lastName
+                    }`}
                   />
                 </ListItemButton>
               </ListItem>
             ))}
           </List>
         </DialogContent>
+
         <DialogActions>
-          <Button onClick={handleCloseDialog} color="secondary">
-            Cancel
+          <Button color="secondary" onClick={handleCloseDialog}>
+            Annuler
           </Button>
         </DialogActions>
       </Dialog>

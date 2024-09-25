@@ -9,6 +9,7 @@ import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import HandshakeIcon from "@mui/icons-material/Handshake";
+import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 
 const Dashboard = () => {
   const theme = useTheme();
@@ -57,6 +58,15 @@ const Dashboard = () => {
           }
           title="Ajouter staff"
           onClick={() => navigate("/staff")}
+        />
+        <IconCard
+          icon={
+            <NotificationsOutlinedIcon
+              sx={{ fontSize: "60px", color: colors }}
+            /> // Use the notification icon here
+          }
+          title="Liste des Notifications"
+          onClick={() => navigate("/notifications")}
         />
 
         <IconCard
