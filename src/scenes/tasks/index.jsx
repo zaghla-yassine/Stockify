@@ -18,7 +18,7 @@ const TaskListPage = () => {
 
   useEffect(() => {
     if (staffId) {
-      fetch(`http://localhost:3000/task/listTasks/${staffId}`)
+      fetch(`http://51.20.144.224:3000/task/listTasks/${staffId}`)
         .then((response) => response.json())
         .then((data) => {
           setTasks(data.tasks);

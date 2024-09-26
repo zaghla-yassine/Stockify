@@ -26,7 +26,7 @@ const Team = () => {
   // Function to log in and obtain the token
   const login = async () => {
     try {
-      const response = await fetch("http://localhost:3000/auth/login", {
+      const response = await fetch("http://51.20.144.224:3000/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -63,13 +63,16 @@ const Team = () => {
       if (!token) return; // Ensure the token is available
 
       try {
-        const response = await fetch("http://localhost:3000/users?role=Staff", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await fetch(
+          "http://51.20.144.224:3000/users?role=Staff",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         if (!response.ok) {
           throw new Error("Failed to fetch staff members");

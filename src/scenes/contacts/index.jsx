@@ -17,7 +17,7 @@ const Contacts = () => {
 
   const login = async () => {
     try {
-      const response = await fetch("http://localhost:3000/auth/login", {
+      const response = await fetch("http://51.20.144.224:3000/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -54,7 +54,7 @@ const Contacts = () => {
 
       try {
         const response = await fetch(
-          "http://localhost:3000/users?role=Default&isSubscribed=true",
+          "http://51.20.144.224:3000/users?role=Default&isSubscribed=true",
           {
             method: "GET",
             headers: {

@@ -31,7 +31,7 @@ const FAQ = () => {
   // Fetch FAQs from the backend
   useEffect(() => {
     axios
-      .get("http://localhost:3000/faqs")
+      .get("http://51.20.144.224:3000/faqs")
       .then((response) => {
         setFaqs(response.data);
       })
@@ -52,7 +52,7 @@ const FAQ = () => {
   // Add a new FAQ
   const handleAddFaq = () => {
     axios
-      .post("http://localhost:3000/faqs", newFaq)
+      .post("http://51.20.144.224:3000/faqs", newFaq)
       .then((response) => {
         setFaqs([...faqs, response.data]);
         setNewFaq({ question: "", answer: "" });
@@ -78,7 +78,7 @@ const FAQ = () => {
   // Delete an FAQ
   const handleDeleteFaq = (id) => {
     axios
-      .delete(`http://localhost:3000/faqs/${id}`)
+      .delete(`http://51.20.144.224:3000/faqs/${id}`)
       .then(() => {
         setFaqs(faqs.filter((faq) => faq.id !== id));
       })

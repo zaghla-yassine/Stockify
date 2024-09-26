@@ -23,7 +23,7 @@ const NotificationsPage = () => {
   useEffect(() => {
     const login = async () => {
       try {
-        const response = await fetch("http://localhost:3000/auth/login", {
+        const response = await fetch("http://51.20.144.224:3000/auth/login", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -56,7 +56,7 @@ const NotificationsPage = () => {
       const fetchNotifications = async () => {
         try {
           const response = await axios.get(
-            "http://localhost:3000/notification/all",
+            "http://51.20.144.224:3000/notification/all",
             {
               headers: { Authorization: `Bearer ${token}` },
             }
@@ -87,7 +87,7 @@ const NotificationsPage = () => {
 
     try {
       await axios.post(
-        "http://localhost:3000/notification/view",
+        "http://51.20.144.224:3000/notification/view",
         { ids: selectedIds },
         { headers: { Authorization: `Bearer ${token}` } }
       );

@@ -30,7 +30,7 @@ const Topbar = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/auth/logout", {
+      const response = await fetch("http://51.20.144.224:3000/auth/logout", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -33,7 +33,7 @@ const AddStaffForm = () => {
 
   const login = async () => {
     try {
-      const response = await fetch("http://localhost:3000/auth/login", {
+      const response = await fetch("http://51.20.144.224:3000/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -75,7 +75,7 @@ const AddStaffForm = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/staff", {
+      const response = await fetch("http://51.20.144.224:3000/staff", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

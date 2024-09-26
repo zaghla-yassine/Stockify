@@ -70,7 +70,7 @@ const Command = () => {
   // Fetch staff when dialog opens
   const fetchStaff = async () => {
     try {
-      const response = await fetch("http://localhost:3000/staff", {
+      const response = await fetch("http://51.20.144.224:3000/staff", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`, // Include admin JWT token
@@ -113,7 +113,7 @@ const Command = () => {
   const handlePayment = async () => {
     try {
       const response = await fetch(
-        "http://localhost:3000/payment/clientGuest",
+        "http://51.20.144.224:3000/payment/clientGuest",
         {
           method: "POST",
           headers: {
@@ -141,7 +141,7 @@ const Command = () => {
   const handleInstallation = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/users/${client.id}/subscribe`,
+        `http://51.20.144.224:3000/users/${client.id}/subscribe`,
         {
           method: "POST",
           headers: {
@@ -167,7 +167,7 @@ const Command = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/task/staff", {
+      const response = await fetch("http://51.20.144.224:3000/task/staff", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

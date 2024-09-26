@@ -29,7 +29,7 @@ const Guests = () => {
 
   const login = async () => {
     try {
-      const response = await fetch("http://localhost:3000/auth/login", {
+      const response = await fetch("http://51.20.144.224:3000/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -61,7 +61,7 @@ const Guests = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:3000/users?role=Default&isSubscribed=false",
+        "http://51.20.144.224:3000/users?role=Default&isSubscribed=false",
         {
           method: "GET",
           headers: {
@@ -99,7 +99,7 @@ const Guests = () => {
   const fetchProducts = async (clientId) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/product/client/${clientId}`,
+        `http://51.20.144.224:3000/product/client/${clientId}`,
         {
           method: "GET",
           headers: {
