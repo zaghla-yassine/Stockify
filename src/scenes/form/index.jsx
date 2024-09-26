@@ -27,14 +27,25 @@ const Form = () => {
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
   const handleFormSubmit = async (values) => {
+    const { firstName, lastName, gender, email, phoneNumber, price, packType } =
+      values;
+
+    const payload = {
+      createUserDto: { firstName, lastName, gender, email, phoneNumber },
+      createProductDto: { price, packType },
+    };
+
     try {
-      const response = await fetch("http://localhost:3000/auth/singup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      });
+      const response = await fetch(
+        "http://localhost:3000/command/create/ClientGuest",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        }
+      );
       const data = await response.json();
       if (response.ok) {
         setSnackbarMessage("Utilisateur créé avec succès !");
@@ -52,10 +63,6 @@ const Form = () => {
       setSnackbarOpen(true);
     }
   };
-
-  const togglePasswordVisibility = () => setShowPassword(!showPassword);
-  const toggleConfirmPasswordVisibility = () =>
-    setShowConfirmPassword(!showConfirmPassword);
 
   const handleCloseSnackbar = () => setSnackbarOpen(false);
 
@@ -88,6 +95,7 @@ const Form = () => {
                 "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
               }}
             >
+              {/* Existing Fields */}
               <TextField
                 fullWidth
                 variant="filled"
@@ -156,55 +164,39 @@ const Form = () => {
                 helperText={touched.email && errors.email}
                 sx={{ gridColumn: "span 4" }}
               />
+
+              {/* New Fields for Price and Pack Type */}
               <TextField
                 fullWidth
                 variant="filled"
-                type={showPassword ? "text" : "password"}
-                label="Mot de Passe"
+                type="number"
+                label="Prix"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                value={values.password}
-                name="password"
-                error={!!touched.password && !!errors.password}
-                helperText={touched.password && errors.password}
+                value={values.price}
+                name="price"
+                error={!!touched.price && !!errors.price}
+                helperText={touched.price && errors.price}
                 sx={{ gridColumn: "span 4" }}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton onClick={togglePasswordVisibility}>
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
               />
-              <TextField
+              <FormControl
                 fullWidth
                 variant="filled"
-                type={showConfirmPassword ? "text" : "password"}
-                label="Confirmer le Mot de Passe"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.confirmPassword}
-                name="confirmPassword"
-                error={!!touched.confirmPassword && !!errors.confirmPassword}
-                helperText={touched.confirmPassword && errors.confirmPassword}
                 sx={{ gridColumn: "span 4" }}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton onClick={toggleConfirmPasswordVisibility}>
-                        {showConfirmPassword ? (
-                          <VisibilityOff />
-                        ) : (
-                          <Visibility />
-                        )}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
+              >
+                <InputLabel>Type de Pack</InputLabel>
+                <Select
+                  name="packType"
+                  value={values.packType}
+                  onChange={handleChange}
+                  error={!!touched.packType && !!errors.packType}
+                >
+                  <MenuItem value="STANDARD">Standard</MenuItem>
+                  <MenuItem value="PERSONNALIZED">Personnalisé</MenuItem>
+                </Select>
+              </FormControl>
             </Box>
+
             <Box display="flex" justifyContent="end" mt="20px">
               <Button type="submit" color="secondary" variant="contained">
                 Créer nouveau Client
@@ -217,13 +209,24 @@ const Form = () => {
       {/* Snackbar for success/error messages */}
       <Snackbar
         open={snackbarOpen}
-        autoHideDuration={6000}
+        autoHideDuration={10000}
         onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        sx={{ width: "400px" }}
       >
         <Alert
           onClose={handleCloseSnackbar}
           severity={snackbarSeverity}
-          sx={{ width: "100%" }}
+          sx={{
+            width: "100%",
+            height: "100px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontWeight: "800",
+            fontSize: "1.2rem",
+            textAlign: "center",
+          }}
         >
           {snackbarMessage}
         </Alert>
@@ -232,7 +235,7 @@ const Form = () => {
   );
 };
 
-const phoneRegExp = /^\d{8}$/; // Ensure exactly 8 digits
+const phoneRegExp = /^\d{8}$/;
 
 const checkoutSchema = yup.object().shape({
   firstName: yup.string().required("Le prénom est requis"),
@@ -246,14 +249,11 @@ const checkoutSchema = yup.object().shape({
     )
     .required("Le numéro de téléphone est requis"),
   email: yup.string().email("Email invalide").required("L'email est requis"),
-  password: yup.string().required("Le mot de passe est requis"),
-  confirmPassword: yup
-    .string()
-    .oneOf(
-      [yup.ref("password"), null],
-      "Les mots de passe doivent correspondre"
-    )
-    .required("La confirmation du mot de passe est requise"),
+  price: yup
+    .number()
+    .required("Le prix est requis")
+    .min(0, "Le prix doit être supérieur à 0"),
+  packType: yup.string().required("Le type de pack est requis"),
 });
 
 const initialValues = {
@@ -262,8 +262,8 @@ const initialValues = {
   gender: "",
   phoneNumber: "",
   email: "",
-  password: "",
-  confirmPassword: "",
+  price: "",
+  packType: "",
 };
 
 export default Form;

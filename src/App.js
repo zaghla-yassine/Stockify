@@ -17,6 +17,10 @@ import { ColorModeContext, useMode } from "./theme";
 import Calendar from "./scenes/calendar/calendar";
 import UserDashboard from "./scenes/dashboard/UserDashboard";
 import AddStaffForm from "./scenes/staff";
+import Guests from "./scenes/guests";
+import Command from "./scenes/command";
+import TaskListPage from "./scenes/tasks";
+import NotificationsPage from "./scenes/notifications";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -34,6 +38,7 @@ function App() {
               <Route path="/" element={<Dashboard />} />
               <Route path="/team" element={<Team />} />
               <Route path="/contacts" element={<Contacts />} />
+              <Route path="/guests" element={<Guests />} />
               <Route path="/invoices" element={<Invoices />} />
               <Route path="/form" element={<Form />} />
               <Route path="/staff" element={<AddStaffForm />} />
@@ -44,6 +49,9 @@ function App() {
               <Route path="/calendar" element={<Calendar />} />
               <Route path="/geography" element={<Geography />} />
               <Route path="/dashboard/:userId" element={<UserDashboard />} />
+              <Route path="/command/:clientId" element={<Command />} />
+              <Route path="/tasks/:staffId" element={<TaskListPage />} />
+              <Route path="/notifications" element={<NotificationsPage />} />
             </Routes>
           </main>
         </div>

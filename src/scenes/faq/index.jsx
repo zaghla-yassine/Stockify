@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
   Box,
   Button,
@@ -18,45 +19,7 @@ const FAQ = () => {
   const colors = tokens(theme.palette.mode);
 
   // State for FAQs
-  const [faqs, setFaqs] = useState([
-    {
-      id: 1,
-      question: "Combien coûte un biodigesteur ?",
-      answer:
-        "Nos tarifs pour les biodigesteurs varient selon la taille du réacteur et comprennent un package de diagnostic—basé sur une évaluation personnalisée des besoins énergétiques et en engrais de chaque ferme—l'installation, la formation des utilisateurs. De plus, nous offrons un service de monitoring intelligent et à distance pour optimiser le fonctionnement et la performance de votre biodigesteur.",
-    },
-    {
-      id: 2,
-      question: "Comment fonctionne un digesteur ?",
-      answer:
-        "MEPS fonctionne grâce à la digestion anaérobie de la matière organique. Il vous suffit de verser du fumier animal ou des déchets alimentaires dans l’évier d’entrée du système. Les bactéries présentes s’occuperont du reste : elles transformeront les déchets organiques en biogaz, créant ainsi une source d’énergie renouvelable à partir de vos déchets !",
-    },
-    {
-      id: 3,
-      question:
-        "Quels types de déchets animaux conviennent pour alimenter un biodigesteur, et quel est le nombre minimum d'animaux nécessaire pour commencer ?",
-      answer:
-        "Notre biodigesteur peut traiter efficacement les déchets de divers animaux tels que les cochons, les moutons, les lapins, les chèvres et les chevaux, mais il fonctionne encore mieux avec le fumier de vaches et de porcs. De plus, il peut également gérer les déchets humains et les matières végétales.",
-    },
-    {
-      id: 4,
-      question: "Le biogaz est-il sûr, et y a-t-il un risque d'explosion ?",
-      answer:
-        "Le biogaz est généralement sécurisé et ne comporte pas de risque d'explosion. Cependant, comme pour toutes les sources d'énergie, une mauvaise manipulation peut entraîner des brûlures. Il est donc crucial de rester prudent lors de l'allumage et de l'utilisation du biogaz. Pour des informations détaillées, veuillez consulter le manuel d'utilisation.",
-    },
-    {
-      id: 5,
-      question: "Le système dégage-t-il une odeur ?",
-      answer:
-        "En général, il n'y a pas d'odeur. Cependant, si une odeur se fait sentir, cela indique qu'il est temps de remplacer le filtre.",
-    },
-    {
-      id: 6,
-      question: "Est-il insalubre de cuisiner avec du biogaz ?",
-      answer:
-        "Cuisiner avec du biogaz est sanitaire, car il ne contient pas de bactéries et ne dégage pas d'odeurs. Les agents pathogènes sont partiellement neutralisés pendant le processus de digestion et ont peu de chances de passer par la ligne de biogaz. De plus, tout pathogène potentiel serait éliminé par la flamme du brûleur pendant la cuisson.",
-    },
-  ]);
+  const [faqs, setFaqs] = useState([]);
 
   // State for new FAQ input
   const [newFaq, setNewFaq] = useState({ question: "", answer: "" });
@@ -64,6 +27,18 @@ const FAQ = () => {
   // State for editing FAQ
   const [editFaqId, setEditFaqId] = useState(null);
   const [editFaq, setEditFaq] = useState({ question: "", answer: "" });
+
+  // Fetch FAQs from the backend
+  useEffect(() => {
+    axios
+      .get("http://localhost:3000/faqs")
+      .then((response) => {
+        setFaqs(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching FAQs:", error);
+      });
+  }, []);
 
   // Handle input changes
   const handleInputChange = (e) => {
@@ -76,20 +51,40 @@ const FAQ = () => {
 
   // Add a new FAQ
   const handleAddFaq = () => {
-    const newId = faqs.length + 1;
-    setFaqs([...faqs, { ...newFaq, id: newId }]);
-    setNewFaq({ question: "", answer: "" });
+    axios
+      .post("http://localhost:3000/faqs", newFaq)
+      .then((response) => {
+        setFaqs([...faqs, response.data]);
+        setNewFaq({ question: "", answer: "" });
+      })
+      .catch((error) => {
+        console.error("Error adding FAQ:", error);
+      });
   };
 
   // Update an FAQ
   const handleUpdateFaq = (id) => {
-    setFaqs(faqs.map((faq) => (faq.id === id ? { ...editFaq, id } : faq)));
-    setEditFaqId(null);
+    axios
+      .put(`/faqs/${id}`, editFaq)
+      .then((response) => {
+        setFaqs(faqs.map((faq) => (faq.id === id ? response.data : faq)));
+        setEditFaqId(null);
+      })
+      .catch((error) => {
+        console.error("Error updating FAQ:", error);
+      });
   };
 
   // Delete an FAQ
   const handleDeleteFaq = (id) => {
-    setFaqs(faqs.filter((faq) => faq.id !== id));
+    axios
+      .delete(`http://localhost:3000/faqs/${id}`)
+      .then(() => {
+        setFaqs(faqs.filter((faq) => faq.id !== id));
+      })
+      .catch((error) => {
+        console.error("Error deleting FAQ:", error);
+      });
   };
 
   return (

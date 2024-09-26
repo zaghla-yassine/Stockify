@@ -40,8 +40,8 @@ const AddStaffForm = () => {
           "user-agent": navigator.userAgent,
         },
         body: JSON.stringify({
-          email: "anghamz@gmail.com",
-          password: "password",
+          email: "angreg007@gmail.com",
+          password: "admin",
         }),
       });
 
@@ -101,10 +101,6 @@ const AddStaffForm = () => {
       setSnackbarOpen(true);
     }
   };
-
-  const togglePasswordVisibility = () => setShowPassword(!showPassword);
-  const toggleConfirmPasswordVisibility = () =>
-    setShowConfirmPassword(!showConfirmPassword);
 
   return (
     <Box m="20px">
@@ -203,71 +199,6 @@ const AddStaffForm = () => {
                 helperText={touched.email && errors.email}
                 sx={{ gridColumn: "span 4" }}
               />
-              <FormControl
-                fullWidth
-                variant="filled"
-                sx={{ gridColumn: "span 4" }}
-              >
-                <InputLabel>Rôle</InputLabel>
-                <Select
-                  name="role"
-                  label="Role"
-                  value={values.role}
-                  onChange={handleChange}
-                  error={!!touched.role && !!errors.role}
-                >
-                  <MenuItem value="Staff">Personnel</MenuItem>
-                  <MenuItem value="Admin">Admin</MenuItem>
-                </Select>
-              </FormControl>
-              <TextField
-                fullWidth
-                variant="filled"
-                type={showPassword ? "text" : "password"}
-                label="Mot de passe"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.password}
-                name="password"
-                error={!!touched.password && !!errors.password}
-                helperText={touched.password && errors.password}
-                sx={{ gridColumn: "span 4" }}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton onClick={togglePasswordVisibility}>
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-              <TextField
-                fullWidth
-                variant="filled"
-                type={showConfirmPassword ? "text" : "password"}
-                label="Confirmer le mot de passe"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.confirmPassword}
-                name="confirmPassword"
-                error={!!touched.confirmPassword && !!errors.confirmPassword}
-                helperText={touched.confirmPassword && errors.confirmPassword}
-                sx={{ gridColumn: "span 4" }}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton onClick={toggleConfirmPasswordVisibility}>
-                        {showConfirmPassword ? (
-                          <VisibilityOff />
-                        ) : (
-                          <Visibility />
-                        )}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
               <Button type="submit" color="secondary" variant="contained">
@@ -281,14 +212,24 @@ const AddStaffForm = () => {
       {/* Snackbar for Success/Error Messages */}
       <Snackbar
         open={snackbarOpen}
-        autoHideDuration={6000}
+        autoHideDuration={10000}
         onClose={handleSnackbarClose}
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        sx={{ width: "400px" }}
       >
         <Alert
           onClose={handleSnackbarClose}
           severity={snackbarSeverity}
-          sx={{ width: "100%" }}
+          sx={{
+            width: "100%",
+            height: "100px", // Hauteur
+            display: "flex", // Flexbox pour alignement
+            alignItems: "center", // Centre verticalement
+            justifyContent: "center", // Centre horizontalement
+            fontWeight: "800", // Très gras
+            fontSize: "1.2rem", // Plus grand texte
+            textAlign: "center", // Centrer le texte
+          }}
         >
           {snackbarMessage}
         </Alert>
@@ -311,18 +252,6 @@ const staffSchema = yup.object().shape({
     .string()
     .email("Adresse e-mail non valide")
     .required("L'e-mail est requis"),
-  role: yup.string().oneOf(["Staff", "Admin"]).required("Le rôle est requis"),
-  password: yup
-    .string()
-    .min(8, "Le mot de passe doit comporter au moins 8 caractères")
-    .required("Le mot de passe est requis"),
-  confirmPassword: yup
-    .string()
-    .oneOf(
-      [yup.ref("password"), null],
-      "Les mots de passe ne correspondent pas"
-    )
-    .required("La confirmation du mot de passe est requise"),
 });
 
 const initialValues = {
@@ -331,9 +260,6 @@ const initialValues = {
   gender: "",
   phoneNumber: "",
   email: "",
-  role: "",
-  password: "",
-  confirmPassword: "",
 };
 
 export default AddStaffForm;
