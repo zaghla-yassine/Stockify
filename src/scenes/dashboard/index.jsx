@@ -13,7 +13,7 @@ import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined
 
 const Dashboard = () => {
   const theme = useTheme();
-  const colors = theme.palette.mode === "light" ? "green" : "green";
+  const colors = theme.palette.mode === "light" ? "#114232" : "#114232";
   const navigate = useNavigate();
 
   return (

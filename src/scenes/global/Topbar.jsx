@@ -54,7 +54,7 @@ const Topbar = () => {
       display="flex"
       justifyContent="flex-end"
       alignItems="center"
-      margin={5}
+      sx={{ p: 2, borderBottom: "2px solid #114232" }}
     >
       <IconButton onClick={colorMode.toggleColorMode}>
         {theme.palette.mode === "dark" ? (

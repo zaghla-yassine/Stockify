@@ -26,7 +26,6 @@ const Command = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const navigate = useNavigate();
-  const [amount] = useState(6000);
 
   const [activeStep, setActiveStep] = useState(0);
   const [amountInDT, setAmountInDT] = useState(0);
@@ -120,7 +119,10 @@ const Command = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ clientId, amountInDT: amount }),
+          body: JSON.stringify({
+            clientId,
+            amountInDT: parseInt(amountInDT),
+          }),
         }
       );
 

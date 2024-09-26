@@ -3,22 +3,21 @@ import { useState, useEffect } from "react";
 import { useTheme } from "@mui/material";
 import { tokens } from "../theme";
 
-const LineChart = ({
-  clientId,
-  productId,
-  isCustomLineColors = false,
-  isDashboard = false,
-}) => {
+const LineChart = ({ isCustomLineColors = false, isDashboard = false }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [chartData, setChartData] = useState([]);
+
+  // Hardcoded clientId and productId
+  const clientId = "2981e09b-1639-4d59-a57e-106a90fd813b";
+  const productId = "7b1990aa-83ad-4c3a-8bf9-3c701036ae5c";
 
   useEffect(() => {
     // Fetch data from the API
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://51.20.144.224/product/web/latestData/client/${clientId}/product/${productId}`
+          `http://51.20.144.224:3000/product/web/latestData/client/${clientId}/product/${productId}`
         );
         const data = await response.json();
         console.log(data);
