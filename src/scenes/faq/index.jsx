@@ -95,26 +95,13 @@ const FAQ = () => {
       {faqs.map((faq) => (
         <Accordion key={faq.id} defaultExpanded>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography color={colors.greenAccent[500]} variant="h5">
+            <Typography color={colors.greenAccent[200]} variant="h5">
               {faq.question}
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
             <Typography>{faq.answer}</Typography>
             <Box mt={2}>
-              <Button
-                variant="outlined"
-                color="secondary"
-                onClick={() => {
-                  setEditFaqId(faq.id);
-                  setEditFaq({
-                    question: faq.question,
-                    answer: faq.answer,
-                  });
-                }}
-              >
-                Edit
-              </Button>
               <Button
                 variant="outlined"
                 color="secondary"

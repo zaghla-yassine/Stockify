@@ -181,9 +181,10 @@ const NotificationsPage = () => {
         sx={{
           mt: "20px",
           padding: "10px 20px",
+
           backgroundColor:
             selectedIds.length === 0
-              ? colors.grey[300]
+              ? colors.grey[800]
               : colors.blueAccent[700],
           color: "#fff",
           "&:hover": {

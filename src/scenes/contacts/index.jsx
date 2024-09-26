@@ -1,10 +1,16 @@
-import { Box, Button } from "@mui/material";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+} from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import { useTheme } from "@mui/material";
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // Use useNavigate from react-router-dom
+import { useNavigate } from "react-router-dom";
 
 const Contacts = () => {
   const theme = useTheme();
@@ -13,7 +19,9 @@ const Contacts = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState("");
-  const navigate = useNavigate(); // Initialize useNavigate
+  const [pdfData, setPdfData] = useState(null); // State to store the PDF data
+  const [open, setOpen] = useState(false); // State for controlling the modal
+  const navigate = useNavigate();
 
   const login = async () => {
     try {
@@ -35,8 +43,7 @@ const Contacts = () => {
         throw new Error(result.message || "Login failed");
       }
 
-      setToken(result.accessToken); // Store the token in state
-      console.log(token);
+      setToken(result.accessToken);
     } catch (error) {
       console.error("Error during login:", error);
       setError("Login failed. Please check your credentials and try again.");
@@ -45,12 +52,12 @@ const Contacts = () => {
   };
 
   useEffect(() => {
-    login(); // Login when the component mounts
+    login();
   }, []);
 
   useEffect(() => {
     const fetchClients = async () => {
-      if (!token) return; // Ensure the token is available
+      if (!token) return;
 
       try {
         const response = await fetch(
@@ -87,20 +94,42 @@ const Contacts = () => {
     };
 
     if (token) {
-      fetchClients(); // Fetch clients after obtaining the token
+      fetchClients();
     }
   }, [token]);
 
   const handleDashboardRedirect = (contact) => {
-    // Store contact information in local storage
     localStorage.setItem("contact", JSON.stringify(contact));
-    // Navigate to the specific user's dashboard page
     navigate(`/dashboard/UserDashboard`);
   };
 
-  const handleCommandeRedirect = (contact) => {
-    // Navigate to the Commande page with the contact information
-    navigate(`/command/${contact.id}`);
+  const handleDownloadReport = async () => {
+    try {
+      const response = await fetch("http://51.20.144.224:5000/download", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/pdf",
+        },
+      });
+      console.log(response);
+
+      if (!response.ok) {
+        throw new Error("Failed to download report");
+      }
+
+      const blob = await response.blob(); // Convert the response into a Blob (PDF format)
+      const url = URL.createObjectURL(blob); // Create a URL for the blob
+      setPdfData(url); // Store the PDF URL in state
+      setOpen(true); // Open the popup/modal to display the PDF
+    } catch (error) {
+      console.error("Error downloading report:", error);
+      setError("Failed to download report. Please try again later.");
+    }
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    URL.revokeObjectURL(pdfData); // Clean up the object URL when closing the modal
   };
 
   const columns = [
@@ -126,19 +155,35 @@ const Contacts = () => {
       flex: 1,
       renderCell: (params) => {
         return (
-          <Button
-            variant="contained"
-            sx={{
-              backgroundColor: colors.greenAccent[700],
-              color: "#fff",
-              "&:hover": {
-                backgroundColor: colors.greenAccent[500],
-              },
-            }}
-            onClick={() => handleDashboardRedirect(params.row)}
-          >
-            Dashboard
-          </Button>
+          <>
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: colors.greenAccent[700],
+                color: "#fff",
+                "&:hover": {
+                  backgroundColor: colors.greenAccent[500],
+                },
+              }}
+              onClick={() => handleDashboardRedirect(params.row)}
+            >
+              Dashboard
+            </Button>
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: colors.blueAccent[700],
+                color: "#fff",
+                ml: 1, // Add margin between buttons
+                "&:hover": {
+                  backgroundColor: colors.blueAccent[500],
+                },
+              }}
+              onClick={handleDownloadReport} // Download report on click
+            >
+              Télécharger Rapport
+            </Button>
+          </>
         );
       },
     },
@@ -188,6 +233,25 @@ const Contacts = () => {
           components={{ Toolbar: GridToolbar }}
         />
       </Box>
+
+      {/* Dialog for PDF report */}
+      <Dialog open={open} onClose={handleClose} maxWidth="lg" fullWidth>
+        <DialogContent>
+          {pdfData && (
+            <iframe
+              src={pdfData}
+              title="Report PDF"
+              width="100%"
+              height="600px"
+            />
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
