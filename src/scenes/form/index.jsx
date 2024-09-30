@@ -37,7 +37,7 @@ const Form = () => {
 
     try {
       const response = await fetch(
-        "http://51.20.144.224:3000/command/create/ClientGuest",
+        "http://localhost:3000/command/create/ClientGuest",
         {
           method: "POST",
           headers: {

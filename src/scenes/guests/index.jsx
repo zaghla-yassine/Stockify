@@ -29,7 +29,7 @@ const Guests = () => {
 
   const login = async () => {
     try {
-      const response = await fetch("http://51.20.144.224:3000/auth/login", {
+      const response = await fetch("http://localhost:3000/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -61,7 +61,7 @@ const Guests = () => {
 
     try {
       const response = await fetch(
-        "http://51.20.144.224:3000/users?role=Default&isSubscribed=false",
+        "http://localhost:3000/users?role=Default&isSubscribed=false",
         {
           method: "GET",
           headers: {
@@ -99,7 +99,7 @@ const Guests = () => {
   const fetchProducts = async (clientId) => {
     try {
       const response = await fetch(
-        `http://51.20.144.224:3000/product/client/${clientId}`,
+        `http://localhost:3000/product/client/${clientId}`,
         {
           method: "GET",
           headers: {
@@ -177,11 +177,11 @@ const Guests = () => {
           <Button
             variant="contained"
             sx={{
-              backgroundColor: colors.greenAccent[700],
+              backgroundColor: colors.greenAccent[200],
               color: "#fff",
               marginLeft: "10px",
               "&:hover": {
-                backgroundColor: colors.greenAccent[500],
+                backgroundColor: colors.greenAccent[300],
               },
             }}
             onClick={() => fetchProducts(params.row.id)} // Only opens the dialog
@@ -210,24 +210,29 @@ const Guests = () => {
             borderBottom: "none",
           },
           "& .name-column--cell": {
-            color: colors.greenAccent[300],
+            color: colors.greenAccent[400],
+            fontSize: "16px", // Taille de police plus grande (ajuste la valeur selon tes besoins)
           },
+
           "& .MuiDataGrid-columnHeaders": {
-            backgroundColor: colors.blueAccent[700],
+            backgroundColor: colors.greenAccent[200],
             borderBottom: "none",
+            color: "#fff", // Couleur du texte en blanc
           },
+
           "& .MuiDataGrid-virtualScroller": {
             backgroundColor: colors.primary[400],
           },
           "& .MuiDataGrid-footerContainer": {
             borderTop: "none",
-            backgroundColor: colors.blueAccent[700],
+            backgroundColor: colors.greenAccent[200],
+            color: "#fff",
           },
           "& .MuiCheckbox-root": {
             color: `${colors.greenAccent[200]} !important`,
           },
           "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
-            color: `${colors.grey[100]} !important`,
+            color: `${colors.grey[200]} !important`,
           },
         }}
       >
@@ -253,11 +258,11 @@ const Guests = () => {
                   key={product.id}
                   onClick={() => handleProductClick(product)}
                 >
-                  <ListItemText primary={`${i + 1}--- ${product.id}`} />
+                  <ListItemText primary={`${i + 1}-)   ${product.id}`} />
                 </ListItem>
               ))
             ) : (
-              <p>No products available</p> // Handle empty products array
+              <p>Il n'a pas de produits</p> // Handle empty products array
             )}
           </List>
         </DialogContent>

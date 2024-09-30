@@ -25,7 +25,7 @@ const Contacts = () => {
 
   const login = async () => {
     try {
-      const response = await fetch("http://51.20.144.224:3000/auth/login", {
+      const response = await fetch("http://localhost:3000/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -61,7 +61,7 @@ const Contacts = () => {
 
       try {
         const response = await fetch(
-          "http://51.20.144.224:3000/users?role=Default&isSubscribed=true",
+          "http://localhost:3000/users?role=Default&isSubscribed=true",
           {
             method: "GET",
             headers: {
@@ -105,7 +105,7 @@ const Contacts = () => {
 
   const handleDownloadReport = async () => {
     try {
-      const response = await fetch("http://51.20.144.224:5000/download", {
+      const response = await fetch("http://localhost:5000/download", {
         method: "GET",
         headers: {
           "Content-Type": "application/pdf",
@@ -159,8 +159,8 @@ const Contacts = () => {
             <Button
               variant="contained"
               sx={{
-                backgroundColor: colors.greenAccent[700],
-                color: "#fff",
+                backgroundColor: colors.greenAccent[900],
+                color: "#114232",
                 "&:hover": {
                   backgroundColor: colors.greenAccent[500],
                 },
@@ -172,11 +172,11 @@ const Contacts = () => {
             <Button
               variant="contained"
               sx={{
-                backgroundColor: colors.blueAccent[700],
+                backgroundColor: colors.greenAccent[200],
                 color: "#fff",
                 ml: 1, // Add margin between buttons
                 "&:hover": {
-                  backgroundColor: colors.blueAccent[500],
+                  backgroundColor: colors.greenAccent[300],
                 },
               }}
               onClick={handleDownloadReport} // Download report on click
@@ -206,24 +206,29 @@ const Contacts = () => {
             borderBottom: "none",
           },
           "& .name-column--cell": {
-            color: colors.greenAccent[300],
+            color: colors.greenAccent[400],
+            fontSize: "16px", // Taille de police plus grande (ajuste la valeur selon tes besoins)
           },
+
           "& .MuiDataGrid-columnHeaders": {
-            backgroundColor: colors.blueAccent[700],
+            backgroundColor: colors.greenAccent[200],
             borderBottom: "none",
+            color: "#fff", // Couleur du texte en blanc
           },
+
           "& .MuiDataGrid-virtualScroller": {
             backgroundColor: colors.primary[400],
           },
           "& .MuiDataGrid-footerContainer": {
             borderTop: "none",
-            backgroundColor: colors.blueAccent[700],
+            backgroundColor: colors.greenAccent[200],
+            color: "#fff",
           },
           "& .MuiCheckbox-root": {
             color: `${colors.greenAccent[200]} !important`,
           },
           "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
-            color: `${colors.grey[100]} !important`,
+            color: `${colors.grey[200]} !important`,
           },
         }}
       >

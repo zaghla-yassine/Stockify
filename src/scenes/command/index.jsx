@@ -15,6 +15,7 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
+  StepConnector,
 } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { tokens } from "../../theme";
@@ -70,7 +71,7 @@ const Command = () => {
   // Fetch staff when dialog opens
   const fetchStaff = async () => {
     try {
-      const response = await fetch("http://51.20.144.224:3000/staff", {
+      const response = await fetch("http://localhost:3000/staff", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`, // Include admin JWT token
@@ -113,7 +114,7 @@ const Command = () => {
   const handlePayment = async () => {
     try {
       const response = await fetch(
-        "http://51.20.144.224:3000/payment/clientGuest",
+        "http://localhost:3000/payment/clientGuest",
         {
           method: "POST",
           headers: {
@@ -141,7 +142,7 @@ const Command = () => {
   const handleInstallation = async () => {
     try {
       const response = await fetch(
-        `http://51.20.144.224:3000/users/${client.id}/subscribe`,
+        `http://localhost:3000/users/${client.id}/subscribe`,
         {
           method: "POST",
           headers: {
@@ -167,7 +168,7 @@ const Command = () => {
     }
 
     try {
-      const response = await fetch("http://51.20.144.224:3000/task/staff", {
+      const response = await fetch("http://localhost:3000/task/staff", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -198,31 +199,78 @@ const Command = () => {
     <Box m="20px">
       <Header title="COMMANDE" subtitle="Processus de Commande" />
 
-      {/* Display Client Info */}
-      <Box justifyContent="space-between" alignItems="center" mb="20px">
-        <Typography variant="h5">Nom et Prénom : {`${client.name}`}</Typography>
-        <Typography variant="h5">Email : {client.email}</Typography>
-        <Typography variant="h5">Téléphone : {client.phone}</Typography>
-
-        {/* Display product details */}
-        <Typography variant="h6">ID du produit : {productId}</Typography>
-        <Typography variant="h6">
-          Product Pack Type: {productPackType}
+      <Box
+        p="20px"
+        borderRadius="8px"
+        boxShadow="0 4px 12px rgba(0, 0, 0, 0.1)"
+        bgcolor="#f9f9f9"
+        maxWidth="600px"
+        mb={10}
+      >
+        {/* Display Client Info */}
+        <Typography variant="h4" color="#114232" fontWeight="bold" mb="10px">
+          Informations du Client :
         </Typography>
+        <Box
+          display="flex"
+          flexDirection="column"
+          justifyContent="space-between"
+          bgcolor="#114232"
+          color="#fff"
+          p="20px"
+          borderRadius="8px"
+        >
+          <Typography variant="h6">
+            <strong>Nom et Prénom :</strong> {`${client.name}`}
+          </Typography>
+          <Typography variant="h6">
+            <strong>Email :</strong> {client.email}
+          </Typography>
+          <Typography variant="h6">
+            <strong>Téléphone :</strong> {client.phone}
+          </Typography>
+        </Box>
+
+        {/* Display Product Info */}
+        <Box
+          mt="20px"
+          p="20px"
+          bgcolor="#114232"
+          borderRadius="8px"
+          color="#fff"
+        >
+          <Typography variant="h6">
+            <strong>ID du produit :</strong> {productId}
+          </Typography>
+          <Typography variant="h6">
+            <strong>Type de Pack :</strong> {productPackType}
+          </Typography>
+        </Box>
       </Box>
 
       {/* Stepper */}
-      <Stepper activeStep={activeStep} alternativeLabel>
+      <Stepper
+        activeStep={activeStep}
+        alternativeLabel
+        connector={<StepConnector sx={{ top: "  30%" }} />} // Adjust the connector position
+      >
         {steps.map((label, index) => (
           <Step key={label}>
             <StepLabel
-              sx={{ fontSize: "2rem" }}
-              StepIconProps={{ style: { fontSize: "4rem", color: "#4CAF50" } }} // Increase the size of the icons
+              sx={{
+                fontSize: "2rem",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center", // Center the label and icon vertically
+              }}
+              StepIconProps={{
+                style: { fontSize: "4rem", color: "#114232" },
+              }}
             >
               {label}
               {index === 2 && (
                 <LocalShippingIcon
-                  style={{ marginLeft: 8, fontSize: "2rem" }}
+                  style={{ marginLeft: 8, fontSize: "2rem", marginTop: 8 }} // Adjust the margin as needed
                 />
               )}
             </StepLabel>

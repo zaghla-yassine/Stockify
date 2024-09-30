@@ -26,7 +26,7 @@ const Team = () => {
   // Function to log in and obtain the token
   const login = async () => {
     try {
-      const response = await fetch("http://51.20.144.224:3000/auth/login", {
+      const response = await fetch("http://localhost:3000/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -63,16 +63,13 @@ const Team = () => {
       if (!token) return; // Ensure the token is available
 
       try {
-        const response = await fetch(
-          "http://51.20.144.224:3000/users?role=Staff",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await fetch("http://localhost:3000/users?role=Staff", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         if (!response.ok) {
           throw new Error("Failed to fetch staff members");
@@ -156,21 +153,29 @@ const Team = () => {
             borderBottom: "none",
           },
           "& .name-column--cell": {
-            color: colors.greenAccent[300],
+            color: colors.greenAccent[400],
+            fontSize: "16px", // Taille de police plus grande (ajuste la valeur selon tes besoins)
           },
+
           "& .MuiDataGrid-columnHeaders": {
-            backgroundColor: colors.blueAccent[700],
+            backgroundColor: colors.greenAccent[200],
             borderBottom: "none",
+            color: "#fff", // Couleur du texte en blanc
           },
+
           "& .MuiDataGrid-virtualScroller": {
             backgroundColor: colors.primary[400],
           },
           "& .MuiDataGrid-footerContainer": {
             borderTop: "none",
-            backgroundColor: colors.blueAccent[700],
+            backgroundColor: colors.greenAccent[200],
+            color: "#fff",
           },
           "& .MuiCheckbox-root": {
             color: `${colors.greenAccent[200]} !important`,
+          },
+          "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
+            color: `${colors.grey[200]} !important`,
           },
         }}
       >

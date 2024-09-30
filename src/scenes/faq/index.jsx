@@ -31,7 +31,7 @@ const FAQ = () => {
   // Fetch FAQs from the backend
   useEffect(() => {
     axios
-      .get("http://51.20.144.224:3000/faqs")
+      .get("http://localhost:3000/faqs")
       .then((response) => {
         setFaqs(response.data);
       })
@@ -52,7 +52,7 @@ const FAQ = () => {
   // Add a new FAQ
   const handleAddFaq = () => {
     axios
-      .post("http://51.20.144.224:3000/faqs", newFaq)
+      .post("http://localhost:3000/faqs", newFaq)
       .then((response) => {
         setFaqs([...faqs, response.data]);
         setNewFaq({ question: "", answer: "" });
@@ -65,7 +65,7 @@ const FAQ = () => {
   // Update an FAQ
   const handleUpdateFaq = (id) => {
     axios
-      .put(`/faqs/${id}`, editFaq)
+      .put(`http://localhost:3000/faqs/${id}`, editFaq)
       .then((response) => {
         setFaqs(faqs.map((faq) => (faq.id === id ? response.data : faq)));
         setEditFaqId(null);
@@ -78,13 +78,19 @@ const FAQ = () => {
   // Delete an FAQ
   const handleDeleteFaq = (id) => {
     axios
-      .delete(`http://51.20.144.224:3000/faqs/${id}`)
+      .delete(`http://localhost:3000/faqs/${id}`)
       .then(() => {
         setFaqs(faqs.filter((faq) => faq.id !== id));
       })
       .catch((error) => {
         console.error("Error deleting FAQ:", error);
       });
+  };
+
+  // Toggle Edit Mode
+  const handleEditFaqClick = (faq) => {
+    setEditFaqId(faq.id);
+    setEditFaq({ question: faq.question, answer: faq.answer });
   };
 
   return (
@@ -102,6 +108,15 @@ const FAQ = () => {
           <AccordionDetails>
             <Typography>{faq.answer}</Typography>
             <Box mt={2}>
+              {/* Edit Button */}
+              <Button
+                variant="outlined"
+                color="secondary"
+                onClick={() => handleEditFaqClick(faq)}
+              >
+                Edit
+              </Button>
+              {/* Delete Button */}
               <Button
                 variant="outlined"
                 color="secondary"
