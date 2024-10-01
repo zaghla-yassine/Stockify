@@ -98,20 +98,22 @@ const FAQ = () => {
       <Header title="FAQ" subtitle="Questions Fréquemment Posées" />
 
       {/* FAQ list */}
-      {faqs.map((faq) => (
+      {faqs.map((faq, index) => (
         <Accordion key={faq.id} defaultExpanded>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography color={colors.greenAccent[200]} variant="h5">
-              {faq.question}
+              {index + 1}. {faq.question}
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <Typography>{faq.answer}</Typography>
+            <Typography variant="body1" style={{ fontSize: "1.2rem" }}>
+              {faq.answer}
+            </Typography>
             <Box mt={2}>
               {/* Edit Button */}
               <Button
                 variant="outlined"
-                color="secondary"
+                style={{ backgroundColor: "#114232", color: "white" }}
                 onClick={() => handleEditFaqClick(faq)}
               >
                 Edit
@@ -119,7 +121,7 @@ const FAQ = () => {
               {/* Delete Button */}
               <Button
                 variant="outlined"
-                color="secondary"
+                style={{ backgroundColor: "#114232", color: "white" }}
                 onClick={() => handleDeleteFaq(faq.id)}
                 sx={{ ml: 2 }}
               >

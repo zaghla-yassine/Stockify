@@ -56,16 +56,16 @@ const Topbar = () => {
       alignItems="center"
       sx={{ p: 2, borderBottom: "2px solid #114232" }}
     >
-      <IconButton onClick={colorMode.toggleColorMode}>
-        {theme.palette.mode === "dark" ? (
-          <DarkModeOutlinedIcon sx={{ fontSize: 30 }} />
-        ) : (
+      {/* <IconButton onClick={colorMode.toggleColorMode}>
+        {theme.palette.mode === "light" ? (
           <LightModeOutlinedIcon sx={{ fontSize: 30 }} />
+        ) : (
+          <DarkModeOutlinedIcon sx={{ fontSize: 30 }} />
         )}
-      </IconButton>
+      </IconButton> */}
 
       <IconButton onClick={handleMenuClick}>
-        <PersonOutlinedIcon sx={{ fontSize: 30 }} />
+        <PersonOutlinedIcon sx={{ fontSize: 40, color: "#114232", mr: 4 }} />
       </IconButton>
 
       <Menu
@@ -73,7 +73,9 @@ const Topbar = () => {
         open={Boolean(anchorEl)}
         onClose={handleMenuClose}
       >
-        <MenuItem onClick={handleLogout}>Déconnexion</MenuItem>
+        <MenuItem onClick={handleLogout} sx={{ p: 3 }}>
+          Déconnexion
+        </MenuItem>
       </Menu>
     </Box>
   );

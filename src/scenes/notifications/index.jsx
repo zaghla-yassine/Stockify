@@ -62,8 +62,6 @@ const NotificationsPage = () => {
             }
           );
 
-          console.log("Response data:", response.data); // Log response to inspect its structure
-
           setNotifications(
             Array.isArray(response.data.notifications)
               ? response.data.notifications
@@ -71,7 +69,6 @@ const NotificationsPage = () => {
           );
 
           setTotalPages(response.data.totalPages); // Assuming the API returns total pages
-
           setLoading(false);
         } catch (error) {
           console.error("Error fetching notifications:", error);
@@ -108,8 +105,10 @@ const NotificationsPage = () => {
     }
   };
 
-  // Toggle notification selection
-  const handleSelectNotification = (id) => {
+  // Toggle notification selection, but prevent selecting read notifications
+  const handleSelectNotification = (id, isViewed) => {
+    if (isViewed) return; // Do nothing if the notification is already read
+
     if (selectedIds.includes(id)) {
       setSelectedIds(selectedIds.filter((selectedId) => selectedId !== id));
     } else {
@@ -117,10 +116,12 @@ const NotificationsPage = () => {
     }
   };
 
-  // Display unread notifications first, no need to sort by date
+  // Display unread notifications first, and sort by sending time
   const sortedNotifications = [...notifications].sort((a, b) => {
-    // Prioritize unread notifications (isViewed === false)
-    return a.isViewed - b.isViewed;
+    if (a.isViewed === b.isViewed) {
+      return new Date(b.sendingTime) - new Date(a.sendingTime); // Sort by date
+    }
+    return a.isViewed - b.isViewed; // Prioritize unread notifications
   });
 
   if (loading) {
@@ -151,37 +152,59 @@ const NotificationsPage = () => {
                 border: "1px solid #ccc",
                 borderRadius: "5px",
                 backgroundColor: notification.isViewed
-                  ? colors.grey?.[900] || "#E0E0E0" // Default color for read notifications
-                  : colors.blue?.[100] || "#BBDEFB", // Default color for unread notifications
-                cursor: "pointer",
+                  ? "#E0E0E0" // Grey-200 background for read notifications
+                  : "#114232", // Dark green background for unread notifications
+                cursor: notification.isViewed ? "default" : "pointer", // Disable pointer for read notifications
               }}
-              onClick={() => handleSelectNotification(notification.id)}
+              onClick={() =>
+                handleSelectNotification(notification.id, notification.isViewed)
+              } // Pass the isViewed flag
             >
               {/* Icon based on viewed or not */}
               {selectedIds.includes(notification.id) ||
               notification.isViewed ? (
                 <CheckCircle
                   sx={{
-                    color: colors.greenAccent[700], // Custom color for viewed notifications icon
+                    color:
+                      theme.palette.mode === "dark"
+                        ? colors.greenAccent[700] // Dark mode icon color
+                        : colors.greenAccent[400], // Light mode icon color
                     fontSize: "24px",
                   }}
                 />
               ) : (
                 <Circle
                   sx={{
-                    color: colors.blueAccent[800], // Custom blue color for unread notifications icon
+                    color: "#fff", // White color for unread notifications icon
                     fontSize: "24px",
                   }}
                 />
               )}
 
               {/* Always display the content of notifications */}
-              <Box sx={{ marginLeft: "10px" }}>
-                <Typography variant="h6">{notification.title}</Typography>
-                <Typography variant="body2">
+              <Box
+                sx={{
+                  marginLeft: "10px",
+                  color: notification.isViewed ? "#114232" : "#fff", // Text color: dark green for read, white for unread
+                }}
+              >
+                {/* Increased font size for title, description, and timestamp */}
+                <Typography
+                  variant="h6"
+                  sx={{ fontSize: "1.25rem", color: "inherit" }}
+                >
+                  {notification.title}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{ fontSize: "1rem", color: "inherit" }}
+                >
                   {notification.description}
                 </Typography>
-                <Typography variant="caption">
+                <Typography
+                  variant="caption"
+                  sx={{ fontSize: "0.875rem", color: "inherit" }}
+                >
                   {new Date(notification.sendingTime).toLocaleString()}
                 </Typography>
               </Box>
@@ -203,6 +226,14 @@ const NotificationsPage = () => {
         <Button
           disabled={currentPage === 1}
           onClick={() => setCurrentPage(currentPage - 1)}
+          sx={{
+            color: "#114232", // Set text color to green
+            border: "1px solid #114232", // Set border color to green
+            "&:hover": {
+              backgroundColor: "#114232", // Set background color to green on hover
+              color: "#fff", // White text on hover
+            },
+          }}
         >
           Previous
         </Button>
@@ -212,6 +243,14 @@ const NotificationsPage = () => {
         <Button
           disabled={currentPage === totalPages}
           onClick={() => setCurrentPage(currentPage + 1)}
+          sx={{
+            color: "#114232", // Set text color to green
+            border: "1px solid #114232", // Set border color to green
+            "&:hover": {
+              backgroundColor: "#114232", // Set background color to green on hover
+              color: "#fff", // White text on hover
+            },
+          }}
         >
           Next
         </Button>
@@ -226,7 +265,7 @@ const NotificationsPage = () => {
           backgroundColor:
             selectedIds.length === 0
               ? colors.grey[800]
-              : colors.blueAccent[700],
+              : colors.greenAccent[200],
           color: "#fff",
           "&:hover": {
             backgroundColor: colors.blueAccent[500],
