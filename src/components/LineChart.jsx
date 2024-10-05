@@ -7,41 +7,52 @@ const LineChart = ({ isCustomLineColors = false, isDashboard = false }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [chartData, setChartData] = useState([]);
-
-  // Hardcoded clientId and productId
-  const clientId = "2981e09b-1639-4d59-a57e-106a90fd813b";
-  const productId = "7b1990aa-83ad-4c3a-8bf9-3c701036ae5c";
+  const [clientId, setClientId] = useState(null);
+  const productId = localStorage.getItem("productId"); // Fetch productId from localStorage
 
   useEffect(() => {
-    // Fetch data from the API
+    // Retrieve clientId from localStorage when the component mounts
+    const storedClientId = localStorage.getItem("clientId");
+    console.log(storedClientId);
+    if (storedClientId) {
+      setClientId(storedClientId); // Set clientId in state
+    } else {
+      console.log("No valid clientId found in localStorage");
+    }
+  }, []);
+
+  useEffect(() => {
+    // Fetch data from the API only when clientId and productId are available
     const fetchData = async () => {
-      try {
-        const response = await fetch(
-          `http://51.20.144.224:3000/product/web/latestData/client/${clientId}/product/${productId}`
-        );
-        const data = await response.json();
-        console.log(data);
+      if (clientId && productId) {
+        try {
+          const response = await fetch(
+            `http://51.20.144.224:3000/product/web/latestData/client/${clientId}/product/${productId}`
+          );
+          const data = await response.json();
+          console.log(data);
 
-        // Transform the API data into the format expected by the chart
-        const transformedData = [
-          {
-            id: "Gas Rates",
-            color: colors.primary[500],
-            data: data.latestData.data.map((item) => ({
-              x: item.timestamps, // using timestamps for x-axis
-              y: item.gasRate.CH4, // example using CH4 gas rate for y-axis
-            })),
-          },
-        ];
+          // Transform the API data into the format expected by the chart
+          const transformedData = [
+            {
+              id: "Gas Rates",
+              color: colors.primary[500],
+              data: data.latestData.data.map((item) => ({
+                x: item.timestamps, // using timestamps for x-axis
+                y: item.gasRate.CH4, // example using CH4 gas rate for y-axis
+              })),
+            },
+          ];
 
-        setChartData(transformedData);
-      } catch (error) {
-        console.error("Error fetching data:", error);
+          setChartData(transformedData);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
       }
     };
 
     fetchData();
-  }, [clientId, productId, colors.primary]);
+  }, [clientId, productId, colors.primary]); // Dependency array now includes clientId
 
   return (
     <ResponsiveLine

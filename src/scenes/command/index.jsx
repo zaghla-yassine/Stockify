@@ -67,6 +67,51 @@ const Command = () => {
   } else {
     console.log("Client found:", client);
   }
+  useEffect(() => {
+    const fetchCommandStatus = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/command/status/client/${clientId}/product/${productId}`,
+          {
+            method: "GET",
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch command status.");
+        }
+
+        const data = await response.json();
+        const commandStatus = data.command;
+        console.log(commandStatus);
+
+        // Map the command status to step
+        switch (commandStatus) {
+          case "CONFIRMED":
+            setActiveStep(1); // Step 1: Non payé
+            break;
+          case "ON_GOING":
+            setActiveStep(0); // Step 2: En cours d'installation
+            break;
+          case "IN_STOCK":
+          case "READY_FOR_INSTALL":
+          case "INSTALLED":
+            setActiveStep(3); // Step 3: Livraison et installation terminée
+            break;
+          default:
+            setActiveStep(0); // Default to step 1
+            break;
+        }
+      } catch (error) {
+        console.error("Error fetching command status:", error);
+        setError("Unable to retrieve command status.");
+      }
+    };
+
+    if (clientId && productId) {
+      fetchCommandStatus();
+    }
+  }, [clientId, productId]);
 
   // Fetch staff when dialog opens
   const fetchStaff = async () => {
@@ -282,18 +327,25 @@ const Command = () => {
       <Box mt="40px">
         {activeStep === 0 && (
           <Box sx={{ ml: 25 }}>
-            <Typography variant="h6">Entrez le montant (DT)</Typography>
+            <Typography variant="h4">Entrez le montant (DT) :</Typography>
             <input
               type="number"
               value={amountInDT}
               onChange={(e) => {
                 const value = parseFloat(e.target.value);
                 if (value > 0 || e.target.value === "") {
-                  setAmountInDT(e.target.value); // Only update if the value is > 0 or empty (to allow clearing the input)
+                  setAmountInDT(e.target.value); // Only update if the value is > 0 or empty
                 }
               }}
               min="0"
+              style={{
+                width: "200px",
+                height: "30px",
+                fontSize: "16px",
+                marginTop: "10px",
+              }} // Adjust width, height, and font size as needed
             />
+
             {amountInDT <= 0 && amountInDT !== "" && (
               <Typography color="error">
                 Le montant doit être supérieur à 0.
@@ -304,6 +356,12 @@ const Command = () => {
               color="secondary"
               onClick={handlePayment}
               disabled={amountInDT <= 0}
+              sx={{
+                width: "90px", // Augmenter la largeur
+                height: "40px", // Augmenter la hauteur
+                fontSize: "16px", // Agrandir le texte
+                marginLeft: "10px",
+              }}
             >
               Payer
             </Button>
@@ -317,7 +375,13 @@ const Command = () => {
               variant="contained"
               color="secondary"
               onClick={handleOpenDialog} // Open dialog to select staff
-              sx={{ m: 2 }}
+              sx={{
+                m: 2,
+                width: "120px", // Augmenter la largeur
+                height: "50px", // Augmenter la hauteur
+                fontSize: "14px", // Agrandir le texte
+                marginLeft: "10px",
+              }}
             >
               Choisir Staff
             </Button>
@@ -331,7 +395,12 @@ const Command = () => {
                 variant="contained"
                 color="secondary"
                 onClick={handleTaskCreation} // Assign task to the selected staff member
-                sx={{ ml: 105 }}
+                sx={{
+                  ml: 107,
+                  width: "120px", // Augmenter la largeur
+                  height: "55px", // Augmenter la hauteur
+                  fontSize: "14px", // Agrandir le texte
+                }}
               >
                 Accorder cette tache
               </Button>
@@ -340,15 +409,38 @@ const Command = () => {
                 variant="contained"
                 disabled // Disable the button since the task is already assigned
                 sx={{
-                  ml: 180,
+                  ml: 182,
                   backgroundColor: "red",
-                  color: "white",
+                  color: "green",
                   "&:hover": { backgroundColor: "darkred" },
+                  width: "120px", // Augmenter la largeur
+                  height: "55px", // Augmenter la hauteur
+                  fontSize: "14px",
                 }}
               >
                 En cours de livraison
               </Button>
             )}
+          </Box>
+        )}
+
+        {activeStep === 3 && (
+          <Box
+            sx={{ display: "flex", justifyContent: "center", mt: 4, ml: 150 }}
+          >
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: "white",
+                color: "green",
+                width: "180px", // Button size adjustment
+                height: "55px",
+                fontSize: "16px",
+              }}
+              disabled={true} // Set disabled to true to make the button unclickable
+            >
+              En cours de livraison
+            </Button>
           </Box>
         )}
       </Box>

@@ -4,6 +4,10 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
+  DialogTitle,
+  List,
+  ListItem,
+  ListItemText,
 } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
@@ -15,6 +19,7 @@ import { useNavigate } from "react-router-dom";
 const Contacts = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const [products, setProducts] = useState([]);
   const [clients, setClients] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -22,6 +27,8 @@ const Contacts = () => {
   const [pdfData, setPdfData] = useState(null); // State to store the PDF data
   const [open, setOpen] = useState(false); // State for controlling the modal
   const navigate = useNavigate();
+  const [selectedClientId, setSelectedClientId] = useState(null); //
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const login = async () => {
     try {
@@ -49,6 +56,62 @@ const Contacts = () => {
       setError("Login failed. Please check your credentials and try again.");
       setLoading(false);
     }
+  };
+
+  // Fetch products when a client is selected
+  const fetchProducts = async (clientId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/product/client/${clientId.id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch products");
+      }
+
+      const result = await response.json();
+      console.log("Fetched products:", result);
+
+      setProducts(result.products || []);
+      setSelectedClientId(clientId);
+
+      // Store the selected client's details in localStorage
+      localStorage.setItem(
+        "contact",
+        JSON.stringify({
+          name: clientId.name,
+          email: clientId.email,
+          phone: clientId.phone,
+          id: clientId.id,
+        })
+      );
+
+      setDialogOpen(true);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      setError("Failed to fetch products. Please try again later.");
+    }
+  };
+
+  // Handle product selection
+  const handleProductClick = (product) => {
+    // Store product details in localStorage
+    localStorage.setItem("productId", product.id);
+    localStorage.setItem("productPackType", product.packType);
+    // Store clientId in localStorage from the selected client
+    localStorage.setItem("clientId", selectedClientId.id);
+
+    // Close the dialog after selecting a product
+    setDialogOpen(false);
+
+    // Navigate to Commande page with the selected client and product
+    navigate(`/dashboard/UserDashboard`);
   };
 
   useEffect(() => {
@@ -97,11 +160,6 @@ const Contacts = () => {
       fetchClients();
     }
   }, [token]);
-
-  const handleDashboardRedirect = (contact) => {
-    localStorage.setItem("contact", JSON.stringify(contact));
-    navigate(`/dashboard/UserDashboard`);
-  };
 
   const handleDownloadReport = async () => {
     try {
@@ -165,7 +223,7 @@ const Contacts = () => {
                   backgroundColor: colors.greenAccent[500],
                 },
               }}
-              onClick={() => handleDashboardRedirect(params.row)}
+              onClick={() => fetchProducts(params.row)}
             >
               Dashboard
             </Button>
@@ -256,6 +314,30 @@ const Contacts = () => {
             Close
           </Button>
         </DialogActions>
+      </Dialog>
+      {/* Dialog to display products */}
+      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
+        <DialogTitle style={{ color: "green", fontWeight: "bold" }}>
+          ID des Produits :{" "}
+        </DialogTitle>
+        <DialogContent>
+          <List>
+            {/* Check if products is an array before mapping */}
+            {Array.isArray(products) && products.length > 0 ? (
+              products.map((product, i) => (
+                <ListItem
+                  button
+                  key={product.id}
+                  onClick={() => handleProductClick(product)}
+                >
+                  <ListItemText primary={`${i + 1}-)   ${product.id}`} />
+                </ListItem>
+              ))
+            ) : (
+              <p>Il n'a pas de produits</p> // Handle empty products array
+            )}
+          </List>
+        </DialogContent>
       </Dialog>
     </Box>
   );

@@ -10,6 +10,7 @@ import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import HandshakeIcon from "@mui/icons-material/Handshake";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
+import BarChartIcon from "@mui/icons-material/BarChart"; // Import for "Statistiques"
 
 const Dashboard = () => {
   const theme = useTheme();
@@ -63,16 +64,20 @@ const Dashboard = () => {
           icon={
             <NotificationsOutlinedIcon
               sx={{ fontSize: "60px", color: colors }}
-            /> // Use the notification icon here
+            />
           }
           title="Liste des Notifications"
           onClick={() => navigate("/notifications")}
         />
-
         <IconCard
           icon={<QuestionAnswerIcon sx={{ fontSize: "60px", color: colors }} />}
           title="F.A.Q"
           onClick={() => navigate("/faq")}
+        />
+        <IconCard
+          icon={<BarChartIcon sx={{ fontSize: "60px", color: colors }} />} // New Statistiques icon
+          title="Statistiques"
+          onClick={() => navigate("/stats")} // New route for statistics
         />
       </Box>
     </Box>

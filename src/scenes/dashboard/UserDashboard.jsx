@@ -11,6 +11,7 @@ const UserDashboard = () => {
     const fetchContactData = () => {
       try {
         const storedContact = localStorage.getItem("contact");
+        console.log(storedContact);
 
         if (storedContact) {
           setContact(JSON.parse(storedContact));
@@ -41,15 +42,30 @@ const UserDashboard = () => {
     >
       {contact && (
         <>
-          <Typography variant="h4" mb="20px">
-            Dashboard de {contact.name}
-          </Typography>
-          <Typography variant="body1" mb="10px">
-            Email: {contact.email}
-          </Typography>
-          <Typography variant="body1" mb="20px">
-            Téléphone: {contact.phone}
-          </Typography>
+          <Box
+            sx={{
+              backgroundColor: "#114232",
+              color: "white",
+              borderRadius: "8px",
+              padding: "20px",
+              maxWidth: "800px", // Limit the width of the box
+              ml: "0", // Center the box horizontally
+              mb: "20px",
+              fontSize: "24px", // Adjust the font size as needed
+              textAlign: "left", // Align text to the left
+            }}
+          >
+            <Typography variant="h4" mb="20px">
+              Dashboard de {contact.name} :
+            </Typography>
+            <Typography variant="body1" mb="10px">
+              * Email: {contact.email}
+            </Typography>
+            <Typography variant="body1" mb="10px">
+              * Téléphone: {contact.phone}
+            </Typography>
+          </Box>
+
           {/* Render the Line component */}
           <Box flexGrow={1}>
             <Line />
