@@ -6,13 +6,7 @@ import "react-pro-sidebar/dist/css/styles.css";
 import { tokens } from "../../theme";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
-import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
-import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
-import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
-import PeopleOutlineOutlinedIcon from "@mui/icons-material/PeopleOutlineOutlined";
-import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
-
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
@@ -42,8 +36,13 @@ const Sidebar = () => {
   return (
     <Box
       sx={{
+        transition: "all 0.3s ease-in-out",
+        "& .pro-sidebar": {
+          transition: "width 0.3s ease-in-out",
+        },
         "& .pro-sidebar-inner": {
           background: `${colors.primary[400]} !important`,
+          transition: "all 0.3s ease-in-out",
         },
         "& .pro-icon-wrapper": {
           backgroundColor: "transparent !important",
@@ -63,7 +62,7 @@ const Sidebar = () => {
         collapsed={isCollapsed}
         style={{
           height: "100vh",
-          overflowY: "auto", // Enable vertical scrolling
+          overflowY: "auto",
         }}
       >
         <Menu iconShape="square">
@@ -77,15 +76,7 @@ const Sidebar = () => {
             }}
           >
             {!isCollapsed && (
-              <Box
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
-                ml="15px"
-              >
-                <Typography variant="h3" color={colors.grey[100]}>
-                  MEPS
-                </Typography>
+              <Box>
                 <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
                   <MenuOutlinedIcon />
                 </IconButton>
@@ -98,31 +89,18 @@ const Sidebar = () => {
               <Box display="flex" justifyContent="center" alignItems="center">
                 <img
                   alt="profile-user"
-                  width="80px"
-                  height="100px"
+                  width="130px"
+                  height="180px"
                   src={`../../assets/user.png`}
                   style={{ cursor: "pointer", borderRadius: "0%" }}
                 />
-              </Box>
-              <Box textAlign="center">
-                <Typography
-                  variant="h2"
-                  color={colors.grey[100]}
-                  fontWeight="bold"
-                  sx={{ m: "10px 0 0 0" }}
-                >
-                  AYACHI.K
-                </Typography>
-                <Typography variant="h5" color={colors.greenAccent[500]}>
-                  MEPS super Admin
-                </Typography>
               </Box>
             </Box>
           )}
 
           <Box paddingLeft={isCollapsed ? undefined : "10%"}>
             <Item
-              title="Dashboard"
+              title="News"
               to="/"
               icon={<HomeOutlinedIcon />}
               selected={selected}
@@ -134,33 +112,12 @@ const Sidebar = () => {
               color={colors.grey[300]}
               sx={{ m: "15px 0 5px 20px" }}
             >
-              Data
+              Analysis
             </Typography>
             <Item
-              title="Gérer l'équipe"
-              to="/team"
+              title="View Stock analysis"
+              to="/analysis"
               icon={<PeopleOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Information des Clients"
-              to="/contacts"
-              icon={<ContactsOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Liste des visiteurs"
-              to="/guests"
-              icon={<ContactsOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Liste des notifications"
-              to="/notifications"
-              icon={<NotificationsOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
@@ -170,33 +127,12 @@ const Sidebar = () => {
               color={colors.grey[300]}
               sx={{ m: "15px 0 5px 20px" }}
             >
-              Pages
+              Report
             </Typography>
             <Item
-              title="Formulaire Client"
-              to="/form"
+              title="Report Generator"
+              to="/report"
               icon={<PersonOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Formulaire Staff"
-              to="/staff"
-              icon={<PeopleOutlineOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            {/* <Item
-              title="Calendrier"
-              to="/calendar"
-              icon={<CalendarTodayOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            /> */}
-            <Item
-              title="Page FAQ"
-              to="/faq"
-              icon={<HelpOutlineOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
